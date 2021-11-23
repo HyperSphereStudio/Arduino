@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Final_Project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Final_Project">
+				<Option output="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/libFinal_Project.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp"/>
+					<Add directory="C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino"/>
+					<Add directory="C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src"/>
+					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../lib/../include/w32api"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 Final_Project"/>
+					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Final_Project/fast">
+				<Option output="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/libFinal_Project.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp"/>
+					<Add directory="C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino"/>
+					<Add directory="C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src"/>
+					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../lib/../include/w32api"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 Final_Project/fast"/>
+					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Configuration.h">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Control.cpp">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Control.h">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Graph.cpp">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Graph.h">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Robot.cpp">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Robot.h">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/main.h">
+			<Option target="Final_Project"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

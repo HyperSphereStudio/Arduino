@@ -1,0 +1,16 @@
+Library Written By Johnathan Bizzano for Arduino in C++
+
+
+
+USAGE:
+
+	Change main.cpp to fit project. Changing other files may cause fail.
+	Add to main event handler:
+	
+	InitEV
+	updateInit_EV
+	destroyEV
+	testEV
+
+
+	

@@ -1,0 +1,2 @@
+/usr/bin/ar.exe qc libFinal_Project.a CMakeFiles/Final_Project.dir/Control.cpp.o CMakeFiles/Final_Project.dir/Graph.cpp.o CMakeFiles/Final_Project.dir/Robot.cpp.o
+/usr/bin/ranlib.exe libFinal_Project.a

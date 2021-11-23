@@ -1,0 +1,22 @@
+Library Written By Johnathan Bizzano for Arduino in C++
+
+
+
+USAGE:
+
+	Copy Project.ino over
+	Include Library on arduino
+	Include scpp Library
+	Copy _Configurations.h
+	Make a file called main.h
+	Create a function called __main__(). 
+	
+	Add to main event handler:
+	
+	MainInit_EV
+	InnerMainLoopInit_EV
+	InnerMainLoopUpdate_EV
+	MainLoop_EV
+	DestroyMain_EV
+	HardwareTest_EV
+	

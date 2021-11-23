@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -g -Wl,--enable-auto-import CMakeFiles/Arduino.dir/Cirk1A.cpp.o -o Arduino.exe -Wl,--out-implib,libArduino.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
