@@ -1,19 +1,32 @@
-//
-// Created by JohnB on 11/21/2021.
-//
+/*--------------------------------
+  Copywrite Johnathan Bizzano 11/22/2021
+  Arduino Library
 
-#ifndef FINAL_PROJECT_TIMER_H
-#define FINAL_PROJECT_TIMER_H
+  Modification, Distribution and Decompilation are not allowed without written permission from Johnathan Bizzano
+  -----------------------------------------*/
 
-#include "lib.h"
+#ifndef HyperSphere_Timer_H
+#define HyperSphere_Timer_H
 
-class Timer {
-    Time lastUpdatedTime;
-public:
-    Timer();
-    ~Timer();
+#include "core.h"
 
-};
+typedef void TimeEvent(void* arg);
 
+namespace Hypersphere {
+    class Timer {
+        Time lastUpdatedTime, stopTime;
+        TimeEvent* event;
 
-#endif //FINAL_PROJECT_TIMER_H
+    public:
+        Timer();
+
+        void update(void* arg);
+        void stop();
+        void reset(Time stopIn);
+        void start(Time stopIn, TimeEvent event);
+        Time timeLeft();
+        bool isActive();
+    };
+}
+
+#endif

@@ -2,11 +2,8 @@
 // Created by JohnB on 11/18/2021.
 //
 
-#ifndef FINAL_PROJECT_CONFIGURATION_H
-#define FINAL_PROJECT_CONFIGURATION_H
-
-#include "Utils.h"
-#include "lib.h"
+#ifndef HyperSphere_Configuration_H
+#define HyperSphere_Configuration_H
 
 //Required
 #define TEST false
@@ -29,9 +26,10 @@
 
 #define close_distance 15.0
 #define ObjectDetectionThreshold 100
+#define CalibrationRotations 3
 #define driveSpeed 255
-static Time turnTime = (Time) ((1250.0 * 255.0) / driveSpeed);
 
 
+#include "core.h"
 
-#endif //FINAL_PROJECT_CONFIGURATION_H
+#endif

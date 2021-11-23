@@ -1,29 +1,34 @@
-//
-// Created by JohnB on 11/21/2021.
-//
+/*--------------------------------
+  Copywrite Johnathan Bizzano 11/22/2021
+  Arduino Library
 
-#ifndef FINAL_PROJECT_PTR_H
-#define FINAL_PROJECT_PTR_H
+  Modification, Distribution and Decompilation are not allowed without written permission from Johnathan Bizzano
+  -----------------------------------------*/
 
-template<typename T>
-class ptr{
-    T* _ptr;
-public:
-    ptr<T>(T* t) : _ptr(t){}
+#ifndef HyperSphere_ptr_H
+#define HyperSphere_ptr_H
 
-    ptr<T>() : _ptr(new T()){}
+namespace Hypersphere {
+    template<typename T>
+    class ptr {
+        T *_ptr;
+    public:
+        ptr<T>(T *t) : _ptr(t) {}
 
-    ~ptr(){
-        delete _ptr;
-    }
+        ptr<T>() : _ptr(new T()) {}
 
-    T* operator->() {
-        return _ptr;
-    }
+        ~ptr() {
+            delete _ptr;
+        }
 
-    T* get(){
-        return _ptr;
-    }
-};
+        T *operator->() {
+            return _ptr;
+        }
 
-#endif //FINAL_PROJECT_PTR_H
+        T *get() {
+            return _ptr;
+        }
+    };
+}
+
+#endif

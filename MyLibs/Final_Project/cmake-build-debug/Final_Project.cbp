@@ -109,9 +109,6 @@
 		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Robot.h">
 			<Option target="Final_Project"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/main.h">
-			<Option target="Final_Project"/>
-		</Unit>
 		<Unit filename="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

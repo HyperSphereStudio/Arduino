@@ -6,33 +6,42 @@
 #define FINAL_PROJECT_ROBOT_H
 
 #include "Control.h"
-#include "EventManager.h"
+#include "Timer.h"
+#include "Graph.h"
 
 
-#define RobotForward_EV 1
-#define RobotBackward_EV 2
-#define RobotRightTurn_EV 3
-#define RobotLeftTurn_EV 4
-#define RobotStop_EV 5
-#define RobotTurnAround_EV 6
+#define PausedState 0
+#define CalibratingState 1
+#define MappingState 2
+#define DrivingState 3
+#define NUM_ROBOT_STATES 4
 
-class Robot : EventManager{
+class RobotState;
+class MappingRobotState;
+
+class Robot{
+        friend MappingRobotState;
+
         Time lastUpdateTime;
         int vol;
         double angle;
-        double robotX, robotY;
+        Point curr_loc;
+        Timer object_distance_timer;
+        RobotState* robotStates[NUM_ROBOT_STATES];
+        int robotState;
+        bool wasCalibrated;
+        Graph object_graph;
 
+        static void object_was_detected(void* arg);
+        void object_detection_check();
+        void updateStats();
 
     public:
         static Robot* robot;
 
-        EventManager* rem;
-
         Robot();
-        ~Robot() = default;
+        ~Robot();
         void update();
-        float getX() const;
-        float getY() const;
 
         void stop();
         void driveForward();
@@ -45,11 +54,54 @@ class Robot : EventManager{
         void turnRight();
         void turnLeft();
         void turnAround();
-
-        void calibrate();
+        bool calibrated() const;
+        void change_state(int next_state);
 
         static void setup();
         static void free();
+};
+
+
+class RobotState{
+public:
+    Robot* r;
+    RobotState() : r(nullptr){}
+    explicit RobotState(Robot* r) : r(r){}
+    virtual void object_detected(bool mode){}
+    virtual void update(){}
+    virtual void init_state(){}
+    virtual void destroy_state(){}
+};
+
+class PausedRobotState : public RobotState{
+public:
+    explicit PausedRobotState(Robot* r) : RobotState(r){}
+    void update() override;
+};
+
+class CalibratingRobotState : public RobotState{
+    int rotation_count;
+    Time start_time;
+public:
+    explicit CalibratingRobotState(Robot* r) : RobotState(r), rotation_count(0){}
+    void update() override;
+    void init_state() override;
+    void object_detected(bool mode) override;
+    void destroy_state() override;
+};
+
+class MappingRobotState : public RobotState{
+public:
+    explicit MappingRobotState(Robot* r) : RobotState(r){}
+    void init_state() override;
+    void update() override;
+    void destroy_state() override;
+};
+
+class DrivingRobotState : public RobotState{
+public:
+    explicit DrivingRobotState(Robot* r) : RobotState(r){}
+    void destroy_state() override;
 };
 
 

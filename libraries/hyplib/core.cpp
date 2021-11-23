@@ -1,11 +1,10 @@
 #include "core.h"
-#include "Utils.h"
 
 EventManager* core::mem = new EventManager();
 
 EventFire switch_change;
 
-void init_core(int port, bool test){
+void core::init(int port, bool test){
     if(port != 0)
         Serial.begin(port);
 
@@ -22,7 +21,7 @@ void init_core(int port, bool test){
     }
 }
 
-void destroy_main(){
+void core::destroy_main(){
     core::mem->fire(destroyEV, 0);
     delete core::mem;
 }

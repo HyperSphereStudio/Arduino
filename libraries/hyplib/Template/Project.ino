@@ -1,16 +1,15 @@
+/*--------------------------------
+  Johnathan Bizzano 11/22/2021
+  -----------------------------------------*/
+
 #include <stdio.h>
-#include "core.h"
 #include "Configuration.h"
 #include "main.h"
 
-
 void setup() {
-	MAIN_FUNCTION();
-    init_core(SERIAL_PORT, TEST);
+    main_init(core::mem);
+    core::init(SERIAL_PORT, TEST);
 }
 
-void loop(){
-    main_loop();
-}
-
+void loop(){}
 

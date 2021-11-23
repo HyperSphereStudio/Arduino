@@ -6,27 +6,89 @@
 
 Robot* Robot::robot = nullptr;
 
+Time turnTime = (Time) ((1250.0 * 255.0) / driveSpeed);
+float robotDepth = 10, robotHeight = 10;
+
 Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(90),
-    robotX(0), robotY(0), rem(new EventManager()){}
+        curr_loc(0, 0), object_distance_timer(), robotState(PausedState),
+        wasCalibrated(false), object_graph(robotDepth, robotHeight){
+    robotStates[PausedState] = new PausedRobotState(this);
+    robotStates[CalibratingState] = new CalibratingRobotState(this);
+    robotStates[MappingState] = new MappingRobotState(this);
+    robotStates[DrivingState] = new DrivingRobotState(this);
+}
+
+void Robot::update(){
+    updateStats();
+    object_detection_check();
+    if(Control::swt.isActive()){
+        robotStates[robotState]->update();
+    }else if(robotState != PausedState){
+        change_state(PausedState);
+    }
+}
+
+void Robot::updateStats() {
+    Time deltaTime = millis() - lastUpdateTime;
+    curr_loc.x -= vol * cos(angle) * deltaTime;
+    curr_loc.y -= vol * sin(angle) * deltaTime;
+    lastUpdateTime = millis();
+}
+
+bool robot_update(int event, void* arg){
+    Robot::robot->update();
+    return false;
+}
+
+void Robot::setup() {
+    robot = new Robot();
+    core::mem->subscribe(updateEV, robot_update);
+}
+
+
+void Robot::object_was_detected(void* arg){
+    auto r = ((Robot*) arg);
+    r->robotStates[r->robotState]->object_detected(true);
+}
+
+void Robot::object_detection_check(){
+    bool nearby = Control::objectNearby();
+    object_distance_timer.update(this);
+    if(object_distance_timer.isActive()){
+        if(!nearby){
+            object_distance_timer.stop();
+            robotStates[robotState]->object_detected(false);
+        }
+    }else{
+        if(nearby)
+            object_distance_timer.start(ObjectDetectionThreshold, object_was_detected);
+    }
+}
+
+
+
+void Robot::free() {
+    delete robot;
+}
 
 void Robot::driveForward(){
     update();
-    rem->fire(RobotForward_EV, 0);
-    Control::driveMotors(Forward, Forward);
+    Control::right_motor.drive(driveSpeed);
+    Control::left_motor.drive(driveSpeed);
     vol = 1;
 }
 
 void Robot::driveBackward(){
     update();
-    rem->fire(RobotBackward_EV, 0);
-    Control::driveMotors(Backward, Backward);
+    Control::right_motor.drive(-driveSpeed);
+    Control::left_motor.drive(-driveSpeed);
     vol = -1;
 }
 
 void Robot::stop(){
     update();
-    rem->fire(RobotStop_EV, 0);
-    Control::driveMotors(Stop, Stop);
+    Control::right_motor.drive(0);
+    Control::left_motor.drive(0);
 }
 
 void Robot::driveForward(Time time){
@@ -48,69 +110,111 @@ void Robot::stop(Time time){
 
 void Robot::turnRight() {
     update();
-    rem->fire(RobotRightTurn_EV, 0);
-    Control::driveMotors(Backward, Forward);
+    Control::right_motor.drive(driveSpeed);
+    Control::left_motor.drive(-driveSpeed);
     vol = 0;
-    angle -= 90;
+    angle -= PI / 2;
     delay(turnTime);
     stop();
 }
 
 void Robot::turnLeft() {
     update();
-    rem->fire(RobotLeftTurn_EV, 0);
-    Control::driveMotors(Forward, Backward);
+    Control::right_motor.drive(-driveSpeed);
+    Control::left_motor.drive(driveSpeed);
     vol = 0;
-    angle += 90;
+    angle += PI / 2;
     delay(turnTime);
     stop();
 }
 
 void Robot::turnAround() {
-    rem->fire(RobotTurnAround_EV, 0);
     turnRight();
     turnRight();
 }
 
-void Robot::update() {
-    Time deltaTime = millis() - lastUpdateTime;
-    robotX -= vol * cos(angle) * deltaTime;
-    robotY -= vol * sin(angle) * deltaTime;
-    lastUpdateTime = millis();
+Robot::~Robot() {
+    for(auto & robotState : robotStates){
+        delete robotState;
+    }
 }
 
-float Robot::getX() const {
-    return robotX;
+bool Robot::calibrated() const {
+    return wasCalibrated;
 }
 
-float Robot::getY() const{
-    return robotY;
+void Robot::change_state(int next_state) {
+    if(next_state != robotState){
+        robotStates[robotState]->destroy_state();
+        robotState = next_state;
+        robotStates[robotState]->init_state();
+    }
 }
 
-void Robot::calibrate() {
-    long time_delay = 0;
+void PausedRobotState::update(){
+    if(r->calibrated()){
+        r->change_state(MappingState);
+    }else{
+        r->change_state(CalibratingState);
+    }
+}
+
+
+
+
+
+void CalibratingRobotState::init_state() {
     print("Put near wall");
-    while(true){
-        if(Control::objectNearby()){
-            if(millis() - time_delay >= 5000){
-                break;
-            }else{
-                time_delay = millis();
-            }
+    print("Calibrating...");
+    Control::right_motor.drive(driveSpeed);
+    Control::left_motor.drive(driveSpeed);
+    start_time = millis();
+    rotation_count = 0;
+}
+
+void CalibratingRobotState::update() {}
+
+void CalibratingRobotState::destroy_state() {
+    Control::right_motor.drive(0);
+    Control::left_motor.drive(0);
+}
+
+void CalibratingRobotState::object_detected(bool mode){
+    if(mode){
+        if(rotation_count++ == CalibrationRotations){
+            turnTime = (millis() - start_time) / (CalibrationRotations * 4);
+            r->change_state(MappingState);
+        }else{
+            delay(100);
         }
     }
-    print("Calibrating...");
-    delay(500);
-}
-
-void Robot::free() {
-    delete robot;
-}
-
-void Robot::setup() {
-    robot = new Robot();
 }
 
 
 
 
+void MappingRobotState::destroy_state() {
+    Control::right_motor.drive(0);
+    Control::left_motor.drive(0);
+
+}
+
+void MappingRobotState::init_state() {
+    r->curr_loc.x = 0;
+    r->curr_loc.y = 0;
+
+}
+
+void MappingRobotState::update() {
+
+}
+
+
+
+
+
+
+void DrivingRobotState::destroy_state() {
+    Control::right_motor.drive(0);
+    Control::left_motor.drive(0);
+}

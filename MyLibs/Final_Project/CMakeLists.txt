@@ -9,4 +9,4 @@ include_directories(../../libraries/hyplib)
 set(CMAKE_CXX_STANDARD 14)
 
 add_library(Final_Project Control.cpp Control.h Configuration.h
-        Graph.cpp Graph.h Robot.cpp Robot.h main.h main.h)
+        Graph.cpp Graph.h Robot.cpp Robot.h)
