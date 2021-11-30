@@ -4,9 +4,8 @@
 
 #ifndef FINAL_PROJECT_ROBOTSTATES_H
 #define FINAL_PROJECT_ROBOTSTATES_H
-
-#include "Robot.h"
 #include "array"
+#include "Graph.h"
 
 #define PausedState 0
 #define CalibratingState 1
@@ -14,6 +13,8 @@
 #define DrivingState 3
 #define FailedMappingState 5
 #define NUM_ROBOT_STATES 5
+
+class Robot;
 
 class RobotState{
 public:
@@ -26,8 +27,6 @@ public:
     virtual void init_state(){}
     virtual void destroy_state(){}
 };
-
-class Robot;
 
 class RobotStates : public std::array<RobotState*, NUM_ROBOT_STATES>{
 public:
@@ -66,7 +65,7 @@ public:
 
 class FailedMappingRobotState : public RobotState{
     Point<ustype> gotoLocation;
-
+    bool checkWallMode;
 public:
     explicit FailedMappingRobotState(Robot* r) : RobotState(r), gotoLocation(0, 0){}
     void init_state() override;
@@ -82,4 +81,5 @@ public:
 };
 
 
+#include "Robot.h"
 #endif //FINAL_PROJECT_ROBOTSTATES_H

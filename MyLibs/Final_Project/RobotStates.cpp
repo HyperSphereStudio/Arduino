@@ -72,6 +72,8 @@ void MappingRobotState::update() {
         gotoLocation = r->getForwardPoint(spiralDepth * RobotDepth);
         r->driveForward();
         spiralDepth++;
+    }else if(!r->isMoving()){
+        r->driveForward();
     }
 }
 
@@ -90,6 +92,7 @@ void DrivingRobotState::destroy_state() {
 void FailedMappingRobotState::init_state() {
     r->stop();
     gotoLocation = r->curr_loc;
+    checkWallMode = false;
 }
 
 void FailedMappingRobotState::destroy_state() {
@@ -99,16 +102,21 @@ void FailedMappingRobotState::destroy_state() {
 void FailedMappingRobotState::object_detected(bool mode) {
     if(r->isMoving()){
         r->stop();
+        r->turnLeft();
+        checkWallMode = false;
     }
 }
 
 void FailedMappingRobotState::update() {
     if(gotoLocation.distance(r->curr_loc) <= ObjectDetectionThreshold) {
-        r->turnRight();
+        if(checkWallMode) {
+            r->turnLeft();
+            r->change_state(MappingState, true, false);
+        }else
+            r->turnRight();
+        checkWallMode = true;
         gotoLocation = r->getForwardPoint(RobotDepth);
     }else if(!r->isMoving()){
         r->driveForward();
     }
 }
-
-
