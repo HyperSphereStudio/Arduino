@@ -13,18 +13,19 @@ Time Robot::turnTime = (Time) ((1250.0 * 255.0) / driveSpeed);
 Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(90),
         curr_loc(0, 0), object_distance_timer(), robotState(PausedState),
         wasCalibrated(false), states(this), object_graph(RobotDepth, RobotHeight){
-
     change_state(ENABLE_CALIBRATION ? CalibratingState : MappingState, true, true);
 }
 
 void Robot::update(){
     updateStats();
     object_detection_check();
-    if(Control::swt.isActive()){
-        states[robotState]->update();
-    }else if(robotState != PausedState){
+    states[robotState]->update();
+    /*if(!Control::swt.isActive() && robotState != PausedState){
         change_state(PausedState, true, true);
-    }
+    }else{
+        print("Test");
+
+    }*/
 }
 
 void Robot::updateStats() {

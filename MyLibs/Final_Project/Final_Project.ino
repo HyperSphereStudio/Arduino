@@ -11,6 +11,8 @@ void setup() {
     core::init(SERIAL_PORT, TEST);
 }
 
-void loop(){}
+void loop(){
+    core::loop();
+}
 
 

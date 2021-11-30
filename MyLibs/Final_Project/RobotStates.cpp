@@ -21,13 +21,18 @@ RobotStates::~RobotStates() {
 
 
 void PausedRobotState::update(){
-    if(r->calibrated() || !ENABLE_CALIBRATION){
-        r->change_state(MappingState, true, true);
-    }else{
-        r->change_state(CalibratingState, true, true);
+    if(Control::swt.isActive()){
+        if(r->calibrated() || !ENABLE_CALIBRATION){
+            r->change_state(MappingState, true, true);
+        }else{
+            r->change_state(CalibratingState, true, true);
+        }
     }
 }
 
+void PausedRobotState::init_state() {
+    r->stop();
+}
 
 
 void CalibratingRobotState::init_state() {
@@ -102,7 +107,7 @@ void FailedMappingRobotState::destroy_state() {
 void FailedMappingRobotState::object_detected(bool mode) {
     if(r->isMoving()){
         r->stop();
-        r->turnLeft();
+        r->turnRight();
         checkWallMode = false;
     }
 }
@@ -118,5 +123,7 @@ void FailedMappingRobotState::update() {
         gotoLocation = r->getForwardPoint(RobotDepth);
     }else if(!r->isMoving()){
         r->driveForward();
+    }else{
+
     }
 }

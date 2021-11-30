@@ -39,6 +39,7 @@ class PausedRobotState : public RobotState{
 public:
     explicit PausedRobotState(Robot* r) : RobotState(r){}
     void update() override;
+    void init_state() override;
 };
 
 class CalibratingRobotState : public RobotState{

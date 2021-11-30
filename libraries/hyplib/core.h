@@ -45,6 +45,7 @@ namespace Hypersphere{
 
             static void init(int port, bool test);
             static void destroy_main();
+            static void loop();
     };
 
     template<typename T>
