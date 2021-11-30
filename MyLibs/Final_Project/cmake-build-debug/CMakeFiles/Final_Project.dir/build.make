@@ -89,22 +89,9 @@ CMakeFiles/Final_Project.dir/Control.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Final_Project.dir/Control.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Control.cpp -o CMakeFiles/Final_Project.dir/Control.cpp.s
 
-CMakeFiles/Final_Project.dir/Graph.cpp.o: CMakeFiles/Final_Project.dir/flags.make
-CMakeFiles/Final_Project.dir/Graph.cpp.o: ../Graph.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Final_Project.dir/Graph.cpp.o"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Final_Project.dir/Graph.cpp.o -c /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Graph.cpp
-
-CMakeFiles/Final_Project.dir/Graph.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Final_Project.dir/Graph.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Graph.cpp > CMakeFiles/Final_Project.dir/Graph.cpp.i
-
-CMakeFiles/Final_Project.dir/Graph.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Final_Project.dir/Graph.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Graph.cpp -o CMakeFiles/Final_Project.dir/Graph.cpp.s
-
 CMakeFiles/Final_Project.dir/Robot.cpp.o: CMakeFiles/Final_Project.dir/flags.make
 CMakeFiles/Final_Project.dir/Robot.cpp.o: ../Robot.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Final_Project.dir/Robot.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Final_Project.dir/Robot.cpp.o"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Final_Project.dir/Robot.cpp.o -c /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Robot.cpp
 
 CMakeFiles/Final_Project.dir/Robot.cpp.i: cmake_force
@@ -115,18 +102,31 @@ CMakeFiles/Final_Project.dir/Robot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Final_Project.dir/Robot.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/Robot.cpp -o CMakeFiles/Final_Project.dir/Robot.cpp.s
 
+CMakeFiles/Final_Project.dir/RobotStates.cpp.o: CMakeFiles/Final_Project.dir/flags.make
+CMakeFiles/Final_Project.dir/RobotStates.cpp.o: ../RobotStates.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Final_Project.dir/RobotStates.cpp.o"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Final_Project.dir/RobotStates.cpp.o -c /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/RobotStates.cpp
+
+CMakeFiles/Final_Project.dir/RobotStates.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Final_Project.dir/RobotStates.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/RobotStates.cpp > CMakeFiles/Final_Project.dir/RobotStates.cpp.i
+
+CMakeFiles/Final_Project.dir/RobotStates.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Final_Project.dir/RobotStates.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/RobotStates.cpp -o CMakeFiles/Final_Project.dir/RobotStates.cpp.s
+
 # Object files for target Final_Project
 Final_Project_OBJECTS = \
 "CMakeFiles/Final_Project.dir/Control.cpp.o" \
-"CMakeFiles/Final_Project.dir/Graph.cpp.o" \
-"CMakeFiles/Final_Project.dir/Robot.cpp.o"
+"CMakeFiles/Final_Project.dir/Robot.cpp.o" \
+"CMakeFiles/Final_Project.dir/RobotStates.cpp.o"
 
 # External object files for target Final_Project
 Final_Project_EXTERNAL_OBJECTS =
 
 libFinal_Project.a: CMakeFiles/Final_Project.dir/Control.cpp.o
-libFinal_Project.a: CMakeFiles/Final_Project.dir/Graph.cpp.o
 libFinal_Project.a: CMakeFiles/Final_Project.dir/Robot.cpp.o
+libFinal_Project.a: CMakeFiles/Final_Project.dir/RobotStates.cpp.o
 libFinal_Project.a: CMakeFiles/Final_Project.dir/build.make
 libFinal_Project.a: CMakeFiles/Final_Project.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libFinal_Project.a"

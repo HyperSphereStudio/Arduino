@@ -25,10 +25,12 @@
 #define PWMB 9
 
 #define close_distance 15.0
-#define ObjectDetectionThreshold 100
+#define ObjectDetectionThreshold 10
 #define CalibrationRotations 3
 #define driveSpeed 255
-
+#define ENABLE_CALIBRATION false
+#define RobotDepth 10
+#define RobotHeight 10
 
 #include "core.h"
 

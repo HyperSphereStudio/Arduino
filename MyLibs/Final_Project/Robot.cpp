@@ -4,27 +4,26 @@
 
 #include "Robot.h"
 
+
 Robot* Robot::robot = nullptr;
 
-Time turnTime = (Time) ((1250.0 * 255.0) / driveSpeed);
-float robotDepth = 10, robotHeight = 10;
+Time Robot::turnTime = (Time) ((1250.0 * 255.0) / driveSpeed);
+
 
 Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(90),
         curr_loc(0, 0), object_distance_timer(), robotState(PausedState),
-        wasCalibrated(false), object_graph(robotDepth, robotHeight){
-    robotStates[PausedState] = new PausedRobotState(this);
-    robotStates[CalibratingState] = new CalibratingRobotState(this);
-    robotStates[MappingState] = new MappingRobotState(this);
-    robotStates[DrivingState] = new DrivingRobotState(this);
+        wasCalibrated(false), states(this), object_graph(RobotDepth, RobotHeight){
+
+    change_state(ENABLE_CALIBRATION ? CalibratingState : MappingState, true, true);
 }
 
 void Robot::update(){
     updateStats();
     object_detection_check();
     if(Control::swt.isActive()){
-        robotStates[robotState]->update();
+        states[robotState]->update();
     }else if(robotState != PausedState){
-        change_state(PausedState);
+        change_state(PausedState, true, true);
     }
 }
 
@@ -48,7 +47,7 @@ void Robot::setup() {
 
 void Robot::object_was_detected(void* arg){
     auto r = ((Robot*) arg);
-    r->robotStates[r->robotState]->object_detected(true);
+    r->states[r->robotState]->object_detected(true);
 }
 
 void Robot::object_detection_check(){
@@ -57,7 +56,7 @@ void Robot::object_detection_check(){
     if(object_distance_timer.isActive()){
         if(!nearby){
             object_distance_timer.stop();
-            robotStates[robotState]->object_detected(false);
+            states[robotState]->object_detected(false);
         }
     }else{
         if(nearby)
@@ -134,87 +133,37 @@ void Robot::turnAround() {
 }
 
 Robot::~Robot() {
-    for(auto & robotState : robotStates){
-        delete robotState;
-    }
+    states.~RobotStates();
 }
 
 bool Robot::calibrated() const {
     return wasCalibrated;
 }
 
-void Robot::change_state(int next_state) {
+void Robot::change_state(int next_state, bool fire_destroy, bool fire_init) {
     if(next_state != robotState){
-        robotStates[robotState]->destroy_state();
+        if(fire_destroy)
+            states[robotState]->destroy_state();
         robotState = next_state;
-        robotStates[robotState]->init_state();
+        if(fire_init)
+            states[robotState]->init_state();
     }
 }
 
-void PausedRobotState::update(){
-    if(r->calibrated()){
-        r->change_state(MappingState);
-    }else{
-        r->change_state(CalibratingState);
-    }
-}
-
-
-
-
-
-void CalibratingRobotState::init_state() {
-    print("Put near wall");
-    print("Calibrating...");
-    Control::right_motor.drive(driveSpeed);
-    Control::left_motor.drive(driveSpeed);
-    start_time = millis();
-    rotation_count = 0;
-}
-
-void CalibratingRobotState::update() {}
-
-void CalibratingRobotState::destroy_state() {
-    Control::right_motor.drive(0);
-    Control::left_motor.drive(0);
-}
-
-void CalibratingRobotState::object_detected(bool mode){
-    if(mode){
-        if(rotation_count++ == CalibrationRotations){
-            turnTime = (millis() - start_time) / (CalibrationRotations * 4);
-            r->change_state(MappingState);
-        }else{
-            delay(100);
-        }
-    }
-}
-
-
-
-
-void MappingRobotState::destroy_state() {
-    Control::right_motor.drive(0);
-    Control::left_motor.drive(0);
+void Robot::gotoPoint(Point<ustype> p) {
 
 }
 
-void MappingRobotState::init_state() {
-    r->curr_loc.x = 0;
-    r->curr_loc.y = 0;
-
+Point<ustype> Robot::getForwardPoint(ustype distance) const {
+    if(angle == 0)
+        return {static_cast<unsigned short>(distance + curr_loc.x), curr_loc.y};
+    else if(angle == PI / 2)
+        return {curr_loc.y, static_cast<unsigned short>(distance + curr_loc.y)};
+    else if(angle == 3 * PI / 2)
+        return {static_cast<unsigned short>(curr_loc.x - distance), curr_loc.y};
+    else return {curr_loc.y, static_cast<unsigned short>(curr_loc.y - distance)};
 }
 
-void MappingRobotState::update() {
-
-}
-
-
-
-
-
-
-void DrivingRobotState::destroy_state() {
-    Control::right_motor.drive(0);
-    Control::left_motor.drive(0);
+bool Robot::isMoving() const{
+    return vol == 0;
 }

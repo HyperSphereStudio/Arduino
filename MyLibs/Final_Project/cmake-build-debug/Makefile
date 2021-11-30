@@ -169,33 +169,6 @@ Control.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/Control.cpp.s
 .PHONY : Control.cpp.s
 
-Graph.o: Graph.cpp.o
-
-.PHONY : Graph.o
-
-# target to build an object file
-Graph.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/Graph.cpp.o
-.PHONY : Graph.cpp.o
-
-Graph.i: Graph.cpp.i
-
-.PHONY : Graph.i
-
-# target to preprocess a source file
-Graph.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/Graph.cpp.i
-.PHONY : Graph.cpp.i
-
-Graph.s: Graph.cpp.s
-
-.PHONY : Graph.s
-
-# target to generate assembly for a file
-Graph.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/Graph.cpp.s
-.PHONY : Graph.cpp.s
-
 Robot.o: Robot.cpp.o
 
 .PHONY : Robot.o
@@ -223,6 +196,33 @@ Robot.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/Robot.cpp.s
 .PHONY : Robot.cpp.s
 
+RobotStates.o: RobotStates.cpp.o
+
+.PHONY : RobotStates.o
+
+# target to build an object file
+RobotStates.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/RobotStates.cpp.o
+.PHONY : RobotStates.cpp.o
+
+RobotStates.i: RobotStates.cpp.i
+
+.PHONY : RobotStates.i
+
+# target to preprocess a source file
+RobotStates.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/RobotStates.cpp.i
+.PHONY : RobotStates.cpp.i
+
+RobotStates.s: RobotStates.cpp.s
+
+.PHONY : RobotStates.s
+
+# target to generate assembly for a file
+RobotStates.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Final_Project.dir/build.make CMakeFiles/Final_Project.dir/RobotStates.cpp.s
+.PHONY : RobotStates.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -235,12 +235,12 @@ help:
 	@echo "... Control.o"
 	@echo "... Control.i"
 	@echo "... Control.s"
-	@echo "... Graph.o"
-	@echo "... Graph.i"
-	@echo "... Graph.s"
 	@echo "... Robot.o"
 	@echo "... Robot.i"
 	@echo "... Robot.s"
+	@echo "... RobotStates.o"
+	@echo "... RobotStates.i"
+	@echo "... RobotStates.s"
 .PHONY : help
 
 
