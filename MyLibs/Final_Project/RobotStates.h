@@ -6,13 +6,18 @@
 #define FINAL_PROJECT_ROBOTSTATES_H
 #include "array"
 #include "Graph.h"
+#include "Configuration.h"
 
 #define PausedState 0
 #define CalibratingState 1
 #define MappingState 2
 #define DrivingState 3
-#define FailedMappingState 5
+#define FailedMappingState 4
 #define NUM_ROBOT_STATES 5
+
+typedef short GraphType;
+typedef Point<GraphType, RobotWidth, RobotHeight> RobotPoint;
+typedef Graph<GraphType, RobotWidth, RobotHeight> RobotGraph;
 
 class Robot;
 
@@ -53,11 +58,10 @@ public:
 };
 
 class MappingRobotState : public RobotState{
-    ustype spiralDepth;
-    Point<ustype> gotoLocation;
-
+    GraphType spiralDepth;
 public:
-    explicit MappingRobotState(Robot* r) : RobotState(r), gotoLocation(0, 0), spiralDepth(0){}
+    RobotPoint gotoLocation;
+    explicit MappingRobotState(Robot* r) : RobotState(r), gotoLocation(), spiralDepth(0){}
     void init_state() override;
     void update() override;
     void destroy_state() override;
@@ -65,10 +69,13 @@ public:
 };
 
 class FailedMappingRobotState : public RobotState{
-    Point<ustype> gotoLocation;
+    RobotPoint gotoLocation;
+    RobotPoint mapLocation;
     bool checkWallMode;
+    GraphDirection initDir;
 public:
-    explicit FailedMappingRobotState(Robot* r) : RobotState(r), gotoLocation(0, 0){}
+    explicit FailedMappingRobotState(Robot* r) : RobotState(r),
+        gotoLocation(), checkWallMode(false), initDir(GNorth){}
     void init_state() override;
     void update() override;
     void destroy_state() override;
@@ -79,6 +86,7 @@ class DrivingRobotState : public RobotState{
 public:
     explicit DrivingRobotState(Robot* r) : RobotState(r){}
     void destroy_state() override;
+    void update() override;
 };
 
 

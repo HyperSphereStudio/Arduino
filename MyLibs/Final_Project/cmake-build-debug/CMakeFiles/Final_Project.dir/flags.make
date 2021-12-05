@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++.exe
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib
+CXX_INCLUDES = -I/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib
 
 CXX_FLAGS = -g -std=gnu++14
 

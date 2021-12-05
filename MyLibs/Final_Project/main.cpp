@@ -12,8 +12,9 @@ void main_init(EventManager* mem){
     mem->subscribe(initEV, minit);
 }
 
-bool minit(int event, void* arg) {
+bool minit(int event, void* iteration) {
     //Put Initial Code here
     Control::setup();
     Robot::setup();
+    yield();
 }

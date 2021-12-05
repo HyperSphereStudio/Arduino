@@ -30,6 +30,9 @@
 
 extern HardwareSerial Serial;
 typedef unsigned long Time;
+typedef unsigned int Ptr;
+typedef unsigned long core_loop_update_addr_type;
+
 #include "EventManager.h"
 
 
@@ -38,15 +41,27 @@ typedef unsigned long Time;
 #define destroyEV 2
 #define testEV 3
 
+#define CHECK_TYPE(var,type) { __typeof(var) *__tmp; __tmp = (type *)NULL; (void)__tmp; }
+#define strl(str_literal) F(str_literal)
+
+extern char _end;
+
 namespace Hypersphere{
     class core{
+        static char *ramend;
         public:
             static EventManager* mem;
 
-            static void init(int port, bool test);
+            static void init(int port, int ram_size, bool test);
             static void destroy_main();
             static void loop();
+            static void raminfo(int* usedDynamicRAM, int* usedStaticRAM, int* usedStackRAM, int* freeRAM);
     };
+
+    template<typename T>
+    inline T deref(void* addr){
+        return *((T*) addr);
+    }
 
     template<typename T>
     String str(T t){
@@ -54,8 +69,20 @@ namespace Hypersphere{
     }
 
     template<typename T>
-    static void print(T t){
+    void print(T t){
         Serial.println(t);
+    }
+
+    template<typename T>
+    constexpr void debug_println(T t){
+            Serial.println(t);
+            Serial.flush();
+    }
+
+    template<typename T>
+    constexpr void debug_print(T t){
+        Serial.print(t);
+        Serial.flush();
     }
 }
 

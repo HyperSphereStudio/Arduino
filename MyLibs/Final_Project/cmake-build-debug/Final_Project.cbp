@@ -47,6 +47,7 @@
 					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp"/>
 					<Add directory="C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino"/>
 					<Add directory="C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src"/>
+					<Add directory="C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include"/>
 					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>
@@ -72,6 +73,7 @@
 					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/scpp"/>
 					<Add directory="C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino"/>
 					<Add directory="C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src"/>
+					<Add directory="C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include"/>
 					<Add directory="/cygdrive/c/Users/JohnB/Documents/Arduino/MyLibs/Final_Project/../../libraries/hyplib"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>

@@ -9,33 +9,35 @@
 #include "Timer.h"
 #include "Graph.h"
 #include "RobotStates.h"
+#include "EdgeDelay.h"
 
 class Robot{
         Time lastUpdateTime;
         int vol;
-        double angle;
-        Timer object_distance_timer;
-        RobotStates states;
+        GraphDirection angle;
+        double x, y;
         int robotState;
         bool wasCalibrated;
-        Graph<ustype> object_graph;
+        EdgeDelay object_detection_delay;
 
-        static void object_was_detected(void* arg);
         void object_detection_check();
-        void updateStats();
 
 public:
         static Robot* robot;
         static Time turnTime;
+        static Time driveTime;
 
-        Point<ustype> curr_loc;
+        RobotStates states;
+        RobotPoint curr_loc;
+        RobotGraph object_graph;
 
         Robot();
         ~Robot();
-        void update();
 
-        Point<ustype> getForwardPoint(ustype distance) const;
-        void gotoPoint(Point<ustype> p);
+        void _update();
+        void update();
+        RobotPoint getForwardPoint(GraphType distance) const;
+        void gotoPoint(RobotPoint p);
         void stop();
         void driveForward();
         void driveBackward();
@@ -50,6 +52,13 @@ public:
         bool calibrated() const;
         bool isMoving() const;
         void change_state(int next_state, bool fire_destroy, bool fire_init);
+        void resetPosition();
+        GraphDirection getAngle() const;
+
+        template<typename T>
+        T getState(int state){
+            return *((T*) (states.begin() + state));
+        }
 
         static void setup();
         static void free();

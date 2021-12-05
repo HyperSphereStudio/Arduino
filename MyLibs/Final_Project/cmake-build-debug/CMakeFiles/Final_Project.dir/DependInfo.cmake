@@ -15,6 +15,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../../../libraries/scpp"
   "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino"
   "C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src"
+  "C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include"
   "../../../libraries/hyplib"
   )
 

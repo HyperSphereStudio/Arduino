@@ -10,8 +10,6 @@
 #define SERIAL_PORT 9600
 #define DEBUG true
 
-#define STRPR true
-
 //Pin Placements
 #define switchPin 11
 #define trigPin 10
@@ -24,14 +22,38 @@
 #define BIN2 7
 #define PWMB 9
 
-#define close_distance 15.0
+#define ObjectDetectionTimeThreshold 20
 #define ObjectDetectionThreshold 10
+#define ObjectDistanceSensorThreshold 10
 #define CalibrationRotations 3
 #define driveSpeed 255
 #define ENABLE_CALIBRATION false
-#define RobotDepth 10
-#define RobotHeight 10
+#define RobotWidth 15
+#define RobotHeight 15
+#define HEARTBEAT 1000
 
 #include "core.h"
+
+
+
+
+//Dont Change
+#if DEBUG
+
+#define dprintstrlln(string_literal) (debug_println(strl(string_literal)))
+#define dprintln(v) (debug_println(v))
+#define dprintstrl(string_literal) (debug_print(strl(string_literal)))
+#define dprint(v) (debug_print(v))
+
+#else
+
+#define dprintstrlln(string_literal) ()
+#define dprintln(v) ()
+#define dprintstrl(string_literal) ()
+#define dprint(v) ()
+
+#endif
+
+
 
 #endif
