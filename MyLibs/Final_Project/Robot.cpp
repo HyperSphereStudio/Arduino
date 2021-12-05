@@ -9,14 +9,20 @@ Robot *Robot::robot = nullptr;
 
 Time Robot::turnTime = (Time) (1250.0 * 255.0) / driveSpeed;
 Time Robot::driveTime = turnTime;
+EventFire robot_heart_beat;
 
 Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(GNorth),
                  curr_loc(), robotState(PausedState),
                  wasCalibrated(false), states(this), object_graph(),
                  x(0), y(0), object_detection_delay(ObjectDetectionTimeThreshold) {
     change_state(ENABLE_CALIBRATION ? CalibratingState : MappingState, true, true);
+
+#if DEBUG
     dprintstrl("Robot Initialized into State ");
     dprintln(robotState);
+    core::mem->subscribe(HeartbeatEV, robot_heart_beat);
+    dprintstrlln("Control Initialization Called!");
+#endif
 }
 
 void Robot::_update() {
@@ -173,7 +179,9 @@ void Robot::change_state(int next_state, bool fire_destroy, bool fire_init) {
 }
 
 void Robot::gotoPoint(RobotPoint p) {
-    for(auto dir : object_graph.getPath(curr_loc, p)){
+    vector<GraphDirection> dirs;
+    object_graph.getPath(curr_loc, p, &dirs);
+    for(auto dir : dirs){
         switch(dir){
             case GEast:
                 turnRight();
@@ -221,4 +229,23 @@ void Robot::resetPosition() {
 
 GraphDirection Robot::getAngle() const {
     return angle;
+}
+
+int Robot::getVol() {
+    return vol;
+}
+
+bool robot_heart_beat(int event, void* addr){
+#if DEBUG
+    if(Robot::robot != nullptr){
+        dprintstrl("Robot Position (");
+        dprint(Robot::robot->curr_loc.x);
+        dprintstrl(",");
+        dprint(Robot::robot->curr_loc.y);
+        dprintstrl(")\tVelocity:");
+        dprint(Robot::robot->getVol());
+        dprintstrl("\tDirection:");
+        dprintln(RobotGraph::dirstr(Robot::robot->getAngle()));
+    }
+#endif
 }

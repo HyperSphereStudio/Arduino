@@ -10,7 +10,6 @@
 #include "BasicMotor.h"
 #include "DistanceSensor.h"
 
-
 class Control{
     public:
         static Switch swt;

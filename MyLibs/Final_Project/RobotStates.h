@@ -73,6 +73,7 @@ class FailedMappingRobotState : public RobotState{
     RobotPoint mapLocation;
     bool checkWallMode;
     GraphDirection initDir;
+    int num_failed_spirals;
 public:
     explicit FailedMappingRobotState(Robot* r) : RobotState(r),
         gotoLocation(), checkWallMode(false), initDir(GNorth){}

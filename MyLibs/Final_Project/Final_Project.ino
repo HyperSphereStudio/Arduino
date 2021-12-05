@@ -8,7 +8,7 @@
 
 void setup() {
     main_init(core::mem);
-    core::init(SERIAL_PORT, 32000, TEST);
+    core::init(SERIAL_PORT, 32000, Heart_Beat, TEST);
 }
 
 void loop(){

@@ -287,13 +287,13 @@ public:
 		return goal[1];
 	}
 
-	TVertex* getVertex(Data_Type row, Data_Type col){
-        for (auto const& i : _maze) {
-            if(i->getRow() == row && i->getColumn() == col)
-                return i;
+    void getVertex(Data_Type row, Data_Type col, TVertex*& vertex){
+        for (auto* i : _maze) {
+            if(i->getRow() == row && i->getColumn() == col){
+                vertex = &*i;
+            }
         }
-        return nullptr;
-	}
+    }
 
 private:
 

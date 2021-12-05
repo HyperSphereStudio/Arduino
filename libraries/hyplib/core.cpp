@@ -1,15 +1,17 @@
 #include "core.h"
 
 EventManager* core::mem = new EventManager();
+int core::heart_beat = 0;
 
 EventFire switch_change;
 
 #define RAM_START ((char *) 0x20070000)
 
-void core::init(int port, int ram_size, bool test){
+void core::init(int port, int ram_size, int beat, bool test){
     if(port != 0)
         Serial.begin(port);
     ramend = RAM_START + ram_size;
+    heart_beat = beat;
     core::mem->fire(initEV, test);
 
     if(test){
@@ -20,7 +22,10 @@ void core::init(int port, int ram_size, bool test){
 core_loop_update_addr_type update_count = 0;
 void core::loop(){
         core::mem->fire(updateEV, &update_count);
-        update_count++;
+        if(update_count++ % heart_beat == 0){
+            core_loop_update_addr_type count = (update_count - 1) / heart_beat;
+            core::mem->fire(HeartbeatEV, &count);
+        }
 }
 
 void core::destroy_main(){
@@ -39,6 +44,10 @@ void core::raminfo(int* usedDynamicRAM, int* usedStaticRAM, int* usedStackRAM, i
     usedStackRAM[0] = ramend - &stack_ptr;
     freeRAM[0] = &stack_ptr - heapend;
     free(heapend);
+}
+
+int core::rand_b(int lower, int upper) {
+    return (rand() % (upper - lower + 1)) + lower;
 }
 
 

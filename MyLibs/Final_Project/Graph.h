@@ -25,7 +25,7 @@ public:
     Point() : Point(0, 0){}
 
     bool operator==(Point p) const{
-        return (p.x >= x && p.x + width <= x) && (p.y >= y && p.y + height <= y);
+        return (p.x >= x && p.x + width < x) && (p.y >= y && p.y + height < y);
     }
 
     float distance(Point p){
@@ -52,10 +52,10 @@ public:
     void isVertex(Data_Type y, Data_Type x, bool & top, bool & down, bool & left, bool & right, bool & isGoal) override{
         x = g->itransX(x);
         y = g->itransY(y);
-        top = g->isUnsafePoint(TPoint(x, y + 1));
-        down = g->isUnsafePoint(TPoint(x, y - 1));
-        left = g->isUnsafePoint(TPoint(x - 1, y));
-        right = g->isUnsafePoint(TPoint(x + 1, y));
+        top = g->isSafePoint(TPoint(x, y + 1));
+        down = g->isSafePoint(TPoint(x, y - 1));
+        left = g->isSafePoint(TPoint(x - 1, y));
+        right = g->isSafePoint(TPoint(x + 1, y));
     }
 
     void setSize(size_t & row, size_t & col) override{
@@ -68,6 +68,7 @@ template<typename T, int point_width, int point_height>
 class Graph : public vector<Point<T, point_width, point_height>>{
     using TPoint = Point<T, point_width, point_height>;
     using TVertex = Vertex<T>;
+    using TVector = vector<TPoint>;
 
     T maxX;
     T minX;
@@ -78,7 +79,7 @@ public:
     Graph()= default;
 
     void plotPoint(TPoint p){
-        if(!containsPoint(p, false)){
+        if(!containsPoint(p)){
             vector<TPoint>::push_back(p);
             maxX = max(maxX, p.x);
             maxY = max(maxY, p.y);
@@ -103,46 +104,72 @@ public:
         return false;
     }
 
-    vector<GraphDirection> getPath(TPoint curr_loc, TPoint goto_loc){
+     void getPath(TPoint curr_loc, TPoint goto_loc, vector<GraphDirection>* dirs){
 #if DEBUG
         dprintstrl("Finding Path:(");
         dprint(curr_loc.x);
         dprintstrl("),(");
         dprint(curr_loc.y);
-        dprintstrl("->(");
-        dprint(curr_loc.x);
+        dprintstrl(")->(");
+        dprint(goto_loc.x);
         dprintstrl("),(");
-        dprint(curr_loc.y);
+        dprint(goto_loc.y);
         dprintstrlln(")");
 #endif
-
         maze.reset();
         BreadthFirstSearch<T> bfs;
-        bfs.findPath(maze.getVertex(transX(curr_loc.x), transY(curr_loc.y)),
-                     maze.getVertex(transX(goto_loc.x), transY(goto_loc.y)));
-        return bfs.getPath();
+        TVertex* vex = nullptr;
+        TVertex* vex2 = nullptr;
+        maze.getVertex(transX(curr_loc.x), transY(curr_loc.y), vex);
+        maze.getVertex(transX(goto_loc.x), transY(goto_loc.y), vex2);
+        bfs.findPath(vex, vex2);
+        dprintstrl("Path Found!!! Number of Moves:");
+        dprintln(bfs.getCount());
+        T lastX = curr_loc.x;
+        T lastY = curr_loc.y;
+        for(TVertex* const& v : bfs.getPath()){
+            auto newX = itransX(v->getColumn());
+            auto newY = itransY(v->getRow());
+
+            //No Idea... Dont ask
+            auto diffY = newX - lastX;
+            auto diffX = newY - lastY;
+
+            if(diffX == -1 && diffY == 0){
+                dirs->push_back(GEast);
+            }else if(diffX == 1 && diffY == 0){
+                dirs->push_back(GWest);
+            }else if(diffX == 0 && diffY == -1){
+                dirs->push_back(GNorth);
+            }else if(diffX == 0 && diffY == 1){
+                dirs->push_back(GSouth);
+            }
+            lastX = newX;
+            lastY = newY;
+        }
     }
 
     void mazeify(){
         dprintstrlln("Building Maze");
         MazeReader<T, point_width, point_height> reader(this);
         maze.setMaze(reader);
+        TVector::clear();
+    }
+
+    T transY(T y){
+        return maxY - y;
     }
 
     T itransY(T y){
-        return maxY - (y + minY);
+        return maxY - y;
     }
 
     T itransX(T x){
         return x + minX;
     }
 
-    T transY(T x){
-        return maxX - (x + minX);
-    }
-
     T transX(T x){
-        return maxX - (x + minX);
+        return x - minX;
     }
 
     T getMinX(){

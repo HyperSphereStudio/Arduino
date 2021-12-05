@@ -9,6 +9,7 @@
 #define TEST false
 #define SERIAL_PORT 9600
 #define DEBUG true
+#define Heart_Beat 1000
 
 //Pin Placements
 #define switchPin 11
@@ -30,7 +31,6 @@
 #define ENABLE_CALIBRATION false
 #define RobotWidth 15
 #define RobotHeight 15
-#define HEARTBEAT 1000
 
 #include "core.h"
 

@@ -10,6 +10,7 @@
 #define TEST false
 #define SERIAL_PORT 9600
 #define DEBUG true
+#define Heart_Beat 1000
 
 #include "core.h"
 

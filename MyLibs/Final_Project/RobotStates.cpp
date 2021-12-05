@@ -109,7 +109,6 @@ void MappingRobotState::object_detected(bool mode) {
         dprint(r->curr_loc.y);
         dprintstrlln(")");
 #endif
-
         r->object_graph.plotPoint(r->curr_loc);
         r->change_state(FailedMappingState, false, false);
     }
@@ -121,8 +120,10 @@ void DrivingRobotState::destroy_state() {
 }
 
 void DrivingRobotState::update() {
-    RobotPoint rp(20, 20);
+    RobotPoint rp(core::rand_b(r->object_graph.getMinX(),r->object_graph.getMaxX()),
+                    core::rand_b(r->object_graph.getMinY(),r->object_graph.getMaxY()));
     r->gotoPoint(rp);
+    delay(2000);
 }
 
 
@@ -132,6 +133,7 @@ void FailedMappingRobotState::init_state() {
     mapLocation = r->getState<MappingRobotState>(MappingState).gotoLocation;
     initDir = r->getAngle();
     checkWallMode = false;
+    num_failed_spirals = 0;
 }
 
 void FailedMappingRobotState::destroy_state() {
@@ -157,21 +159,26 @@ void FailedMappingRobotState::object_detected(bool mode) {
         dprint(r->curr_loc.y);
         dprintstrlln(")");
 #endif
-
         r->object_graph.plotPoint(r->curr_loc);
         if(checkWallMode){
             dprintstrlln("Turning away from wall");
             r->turnLeft();
             checkWallMode = false;
         }else{
-            dprintstrlln("Spiral Truncation");
-            r->turnLeft();
-            if(nearEdge(mapLocation, initDir, r)){
-                r->change_state(MappingState, true, false);
+            if(num_failed_spirals++ == 4){
+                dprintstrlln("Mapping Finished!");
+                r->change_state(DrivingState, true, true);
             }else{
-                gotoLocation = r->getForwardPoint(RobotWidth);
-                r->driveForward();
+                dprintstrlln("Spiral Truncation");
+                r->turnLeft();
+                if(nearEdge(mapLocation, initDir, r)){
+                    r->change_state(MappingState, true, false);
+                }else{
+                    gotoLocation = r->getForwardPoint(RobotWidth);
+                    r->driveForward();
+                }
             }
+
         }
     }
 }

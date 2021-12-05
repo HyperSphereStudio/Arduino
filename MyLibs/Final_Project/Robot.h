@@ -51,6 +51,7 @@ public:
         void turnAround();
         bool calibrated() const;
         bool isMoving() const;
+        int getVol();
         void change_state(int next_state, bool fire_destroy, bool fire_init);
         void resetPosition();
         GraphDirection getAngle() const;
