@@ -61,6 +61,7 @@ namespace Hypersphere{
             static void destroy_main();
             static void loop();
             static void raminfo(int* usedDynamicRAM, int* usedStaticRAM, int* usedStackRAM, int* freeRAM);
+            static void printraminfo();
     };
 
     template<typename T>
@@ -71,11 +72,6 @@ namespace Hypersphere{
     template<typename T>
     String str(T t){
         return String(t);
-    }
-
-    template<typename T>
-    void print(T t){
-        Serial.println(t);
     }
 
     template<typename T>

@@ -16,21 +16,25 @@
 #define NUM_ROBOT_STATES 5
 
 typedef short GraphType;
-typedef Point<GraphType, RobotWidth, RobotHeight> RobotPoint;
-typedef Graph<GraphType, RobotWidth, RobotHeight> RobotGraph;
+typedef Point<GraphType, StepSize, StepSize> RobotPoint;
+typedef Graph<GraphType, StepSize, StepSize> RobotGraph;
 
 class Robot;
 
 class RobotState{
+    char* name;
 public:
     Robot* r;
-    RobotState() : r(nullptr){}
+    explicit RobotState() : r(nullptr), name(nullptr) {}
     virtual ~RobotState() = default;
-    explicit RobotState(Robot* r) : r(r){}
+    explicit RobotState(Robot* r, char* name) : r(r), name(name){}
     virtual void object_detected(bool mode){}
     virtual void update(){}
     virtual void init_state(){}
     virtual void destroy_state(){}
+    char* getName() const{
+        return name;
+    }
 };
 
 class RobotStates : public std::array<RobotState*, NUM_ROBOT_STATES>{
@@ -42,7 +46,7 @@ public:
 
 class PausedRobotState : public RobotState{
 public:
-    explicit PausedRobotState(Robot* r) : RobotState(r){}
+    explicit PausedRobotState(Robot* r) : RobotState(r, "Paused"){}
     void update() override;
     void init_state() override;
 };
@@ -51,32 +55,29 @@ class CalibratingRobotState : public RobotState{
     int rotation_count;
     Time start_time;
 public:
-    explicit CalibratingRobotState(Robot* r) : RobotState(r), rotation_count(0){}
+    explicit CalibratingRobotState(Robot* r) : RobotState(r, "Calibrating"), rotation_count(0){}
     void init_state() override;
     void object_detected(bool mode) override;
     void destroy_state() override;
 };
 
 class MappingRobotState : public RobotState{
-    GraphType spiralDepth;
 public:
-    RobotPoint gotoLocation;
-    explicit MappingRobotState(Robot* r) : RobotState(r), gotoLocation(), spiralDepth(0){}
+    RobotPoint gotoPoint;
+    GraphType spiralDepth;
+    explicit MappingRobotState(Robot* r) : RobotState(r, "Mapping"), gotoPoint(), spiralDepth(0){}
     void init_state() override;
     void update() override;
     void destroy_state() override;
     void object_detected(bool mode) override;
+    void recalc_state();
 };
 
 class FailedMappingRobotState : public RobotState{
-    RobotPoint gotoLocation;
-    RobotPoint mapLocation;
-    bool checkWallMode;
+    RobotPoint gotoPoint, mappingPoint;
     GraphDirection initDir;
-    int num_failed_spirals;
 public:
-    explicit FailedMappingRobotState(Robot* r) : RobotState(r),
-        gotoLocation(), checkWallMode(false), initDir(GNorth){}
+    explicit FailedMappingRobotState(Robot* r) : RobotState(r, "Failed Mapping"), gotoPoint(){}
     void init_state() override;
     void update() override;
     void destroy_state() override;
@@ -85,7 +86,8 @@ public:
 
 class DrivingRobotState : public RobotState{
 public:
-    explicit DrivingRobotState(Robot* r) : RobotState(r){}
+    explicit DrivingRobotState(Robot* r) : RobotState(r, "Driving"){}
+    void init_state() override;
     void destroy_state() override;
     void update() override;
 };

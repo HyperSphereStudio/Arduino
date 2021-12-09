@@ -9,30 +9,35 @@
 #define TEST false
 #define SERIAL_PORT 9600
 #define DEBUG true
-#define Heart_Beat 1000
+#define Heart_Beat 2000
 
 //Pin Placements
-#define switchPin 11
-#define trigPin 10
-#define echoPin 8
+#define switchPin 7
+#define trigPin 6
+#define echoPin 5
 
-#define PWMA 3
-#define AIN2 4
-#define AIN1 5
-#define BIN1 6
-#define BIN2 7
-#define PWMB 9
+#define PWMA 11
+#define AIN2 12
+#define AIN1 13
+#define BIN1 8
+#define BIN2 9
+#define PWMB 10
 
+#define OppositeMotorDirection true
 #define ObjectDetectionTimeThreshold 20
-#define ObjectDetectionThreshold 10
-#define ObjectDistanceSensorThreshold 10
+#define ObjectDistanceSensorThreshold 7
 #define CalibrationRotations 3
-#define driveSpeed 255
+#define driveSpeed 200
+#define rightDriveSpeed 100
+#define leftDriveSpeed 105
+#define turnSpeed 140
 #define ENABLE_CALIBRATION false
-#define RobotWidth 15
-#define RobotHeight 15
+#define Version "2.0.4"
+#define MaxSpiralCount 8
+#define StepSize 1
 
 #include "core.h"
+
 
 
 
@@ -44,6 +49,7 @@
 #define dprintln(v) (debug_println(v))
 #define dprintstrl(string_literal) (debug_print(strl(string_literal)))
 #define dprint(v) (debug_print(v))
+#define dprln (dprintstrl("\n"))
 
 #else
 
@@ -51,6 +57,7 @@
 #define dprintln(v) ()
 #define dprintstrl(string_literal) ()
 #define dprint(v) ()
+#define dprln ()
 
 #endif
 

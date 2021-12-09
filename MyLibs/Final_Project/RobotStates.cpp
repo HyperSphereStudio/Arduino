@@ -33,16 +33,13 @@ void PausedRobotState::update(){
 }
 
 void PausedRobotState::init_state() {
-    dprintstrlln("Paused Robot Activity");
     r->stop();
 }
 
 
 void CalibratingRobotState::init_state() {
-    dprintstrlln("Put near wall");
-    dprintstrlln("Calibrating...");
     Control::right_motor.drive(driveSpeed);
-    Control::left_motor.drive(driveSpeed);
+    Control::left_motor.drive(-driveSpeed);
     start_time = millis();
     rotation_count = 0;
 }
@@ -70,48 +67,51 @@ void MappingRobotState::destroy_state() {
 }
 
 void MappingRobotState::init_state() {
-    dprintstrlln("Mapping State Started");
     r->resetPosition();
-    gotoLocation = r->curr_loc;
+    gotoPoint = r->curr_loc;
     spiralDepth = 1;
 }
 
 void MappingRobotState::update() {
-    if(gotoLocation.distance(r->curr_loc) <= ObjectDetectionThreshold){
+    if(r->getLastState() == FailedMappingState){
+        recalc_state();
+        r->change_state(MappingState, false, false);
+    }
+    if(gotoPoint.compare(r->curr_loc)){
+        if(spiralDepth == MaxSpiralCount){
+            r->change_state(DrivingState, true, true);
+        }else{
+            r->turnLeft();
+            recalc_state();
 #if DEBUG
-        dprintstrl("Next Spiral:");
-        dprint(spiralDepth);
-        dprintstrl(". Goto:(");
-        dprint(gotoLocation.x);
-        dprintstrl(",");
-        dprint(gotoLocation.y);
-        dprintstrl(")\tFrom (");
-        dprint(r->curr_loc.x);
-        dprintstrl(",");
-        dprint(r->curr_loc.y);
-        dprintstrlln(")");
+            dprintstrl("Spiral:");
+            dprint(spiralDepth - 1);
+            dprintstrl(". Goto:");
+            print(gotoPoint);
+            dprintstrl("\tFrom:");
+            print(r->curr_loc);
+            dprln;
 #endif
-
-        r->turnLeft();
-        r->driveForward();
-        gotoLocation = r->getForwardPoint(spiralDepth++ * RobotHeight);
-    }else if(!r->isMoving()){
-        r->driveForward();
+        }
     }
 }
 
 void MappingRobotState::object_detected(bool mode) {
     if(mode){
+        r->stop();
 #if DEBUG
-        dprintstrl("Plot Point:(");
-        dprint(r->curr_loc.x);
-        dprintstrl(",");
-        dprint(r->curr_loc.y);
-        dprintstrlln(")");
+        dprintstrl("Plot Point:");
+        print(r->curr_loc);
+        dprln;
 #endif
-        r->object_graph.plotPoint(r->curr_loc);
-        r->change_state(FailedMappingState, false, false);
+        r->object_graph.plotPoint(r->getForwardPoint(StepSize));
+        r->change_state(FailedMappingState, true, true);
     }
+}
+
+void MappingRobotState::recalc_state() {
+    gotoPoint = r->getForwardPoint(spiralDepth++ * StepSize);
+    r->driveForward();
 }
 
 
@@ -123,80 +123,95 @@ void DrivingRobotState::update() {
     RobotPoint rp(core::rand_b(r->object_graph.getMinX(),r->object_graph.getMaxX()),
                     core::rand_b(r->object_graph.getMinY(),r->object_graph.getMaxY()));
     r->gotoPoint(rp);
-    delay(2000);
+    delay(5000);
+}
+
+void DrivingRobotState::init_state() {
+    delay(5000);
 }
 
 
 void FailedMappingRobotState::init_state() {
-    dprintstrlln("Failed Mapping State Started");
-    gotoLocation = r->curr_loc;
-    mapLocation = r->getState<MappingRobotState>(MappingState).gotoLocation;
+    mappingPoint = r->getState<MappingRobotState>(MappingState).gotoPoint;
     initDir = r->getAngle();
-    checkWallMode = false;
-    num_failed_spirals = 0;
+    r->turnLeft();
+    r->driveForward();
+    gotoPoint = r->getForwardPoint(StepSize);
 }
 
 void FailedMappingRobotState::destroy_state() {
     r->stop();
 }
 
-bool nearEdge(RobotPoint mapLocation, GraphDirection initDir, Robot* r){
-    switch(initDir){
-        case GNorth:
-        case GSouth:
-            return abs(r->curr_loc.y - mapLocation.y) <= ObjectDetectionThreshold;
-        default:
-            return abs(r->curr_loc.x - mapLocation.x) <= ObjectDetectionThreshold;
-    }
-}
-
 void FailedMappingRobotState::object_detected(bool mode) {
-    if(mode && r->isMoving()){
-#if DEBUG
-        dprintstrl("Plot Point:(");
-        dprint(r->curr_loc.x);
-        dprintstrl(",");
-        dprint(r->curr_loc.y);
-        dprintstrlln(")");
-#endif
-        r->object_graph.plotPoint(r->curr_loc);
-        if(checkWallMode){
-            dprintstrlln("Turning away from wall");
-            r->turnLeft();
-            checkWallMode = false;
-        }else{
-            if(num_failed_spirals++ == 4){
-                dprintstrlln("Mapping Finished!");
-                r->change_state(DrivingState, true, true);
-            }else{
-                dprintstrlln("Spiral Truncation");
-                r->turnLeft();
-                if(nearEdge(mapLocation, initDir, r)){
-                    r->change_state(MappingState, true, false);
-                }else{
-                    gotoLocation = r->getForwardPoint(RobotWidth);
-                    r->driveForward();
-                }
-            }
+    if(mode){
+        r->stop();
+        r->object_graph.plotPoint(r->getForwardPoint(StepSize));
+        r->turnLeft();
+        gotoPoint = r->getForwardPoint(StepSize);
+        r->driveForward();
 
-        }
+#if DEBUG
+        dprintstrl("Plot Point:");
+        print(r->curr_loc);
+        dprln;
+        dprintstrl("Goto:");
+        print(gotoPoint);
+        dprintstrl("\tFrom:");
+        print(r->curr_loc);
+        dprln;
+#endif
     }
 }
 
 void FailedMappingRobotState::update() {
-    if(gotoLocation.distance(r->curr_loc) <= ObjectDetectionThreshold) {
-        dprintstrlln("Reached Failed Goto Location");
-        if(checkWallMode) {
-            dprintstrlln("Checking Wall");
-            r->turnRight();
-            r->driveForward();
+    if((initDir == r->getAngle() || RobotGraph::isLeft(initDir, r->getAngle())) && mappingPoint.comp_compare(r->curr_loc)){
+        r->turnLeft();
+        if(r->getAngle() == initDir){
+            dprintln("Merging to current spiral");
+            switch(r->getAngle()){
+                case GWest:
+                case GEast:
+                    gotoPoint.y = r->curr_loc.y;
+                    gotoPoint.x = mappingPoint.x;
+                    break;
+                case GNorth:
+                case GSouth:
+                    gotoPoint.y = mappingPoint.y;
+                    gotoPoint.x = r->curr_loc.x;
+                    break;
+            }
+            r->getState<MappingRobotState>(MappingState).gotoPoint = gotoPoint;
         }else{
-            r->turnLeft();
-            checkWallMode = true;
+            dprintln("Creating new Spiral");
         }
-        gotoLocation = r->getForwardPoint(RobotHeight);
-    }else if(!r->isMoving()){
-        dprintstrlln("Starting Failed Driving");
+        r->change_state(MappingState, false, false);
         r->driveForward();
+    }else if(gotoPoint.compare(r->curr_loc)) {
+        if(initDir == r->getAngle() || RobotGraph::isRight(initDir, r->getAngle())){
+            r->turnRight();
+            gotoPoint = r->getForwardPoint(StepSize);
+        }else{
+            switch(r->getAngle()){
+                case GWest:
+                case GEast:
+                    gotoPoint.y = mappingPoint.y;
+                    gotoPoint.x = r->curr_loc.x;
+                    break;
+                case GNorth:
+                case GSouth:
+                    gotoPoint.y = r->curr_loc.y;
+                    gotoPoint.x = mappingPoint.x;
+                    break;
+            }
+        }
+        r->driveForward();
+#if DEBUG
+        dprintstrl("Goto:");
+        print(gotoPoint);
+        dprintstrl("\tFrom:");
+        print(r->curr_loc);
+        dprln;
+#endif
     }
 }

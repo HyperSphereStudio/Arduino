@@ -16,12 +16,12 @@ class Robot{
         int vol;
         GraphDirection angle;
         double x, y;
-        int robotState;
+        int robotState, lastRobotState;
         bool wasCalibrated;
         EdgeDelay object_detection_delay;
 
         void object_detection_check();
-
+        void _stop();
 public:
         static Robot* robot;
         static Time turnTime;
@@ -52,6 +52,7 @@ public:
         bool calibrated() const;
         bool isMoving() const;
         int getVol();
+        int getLastState();
         void change_state(int next_state, bool fire_destroy, bool fire_init);
         void resetPosition();
         GraphDirection getAngle() const;

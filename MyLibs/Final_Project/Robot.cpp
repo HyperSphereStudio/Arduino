@@ -7,14 +7,15 @@
 
 Robot *Robot::robot = nullptr;
 
-Time Robot::turnTime = (Time) (1250.0 * 255.0) / driveSpeed;
-Time Robot::driveTime = turnTime;
+Time Robot::turnTime = (Time) (500.0 * 255.0) / driveSpeed;
+Time Robot::driveTime = 1000;
+
 EventFire robot_heart_beat;
 
 Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(GNorth),
                  curr_loc(), robotState(PausedState),
                  wasCalibrated(false), states(this), object_graph(),
-                 x(0), y(0), object_detection_delay(ObjectDetectionTimeThreshold) {
+                 x(0), y(0), object_detection_delay(ObjectDetectionTimeThreshold), lastRobotState(0) {
     change_state(ENABLE_CALIBRATION ? CalibratingState : MappingState, true, true);
 
 #if DEBUG
@@ -23,6 +24,11 @@ Robot::Robot() : lastUpdateTime(millis()), vol(0), angle(GNorth),
     core::mem->subscribe(HeartbeatEV, robot_heart_beat);
     dprintstrlln("Control Initialization Called!");
 #endif
+
+    object_graph.setMinX(-MaxSpiralCount);
+    object_graph.setMinY(-MaxSpiralCount);
+    object_graph.setMaxX(MaxSpiralCount);
+    object_graph.setMaxY(MaxSpiralCount);
 }
 
 void Robot::_update() {
@@ -35,7 +41,7 @@ void Robot::_update() {
 }
 
 void Robot::update() {
-    double deltaTime = (millis() - lastUpdateTime) / 100.0;
+    double deltaTime = ((double) millis() - lastUpdateTime) / driveTime;
     x += (vol * RobotGraph::dircos(angle) * deltaTime);
     y += (vol * RobotGraph::dirsin(angle) * deltaTime);
     curr_loc.x = x;
@@ -58,10 +64,10 @@ void Robot::object_detection_check() {
     bool nearby = Control::objectNearby();
     if(object_detection_delay.update(nearby)){
         if (nearby) {
-            dprintstrlln("Detected Object");
+            dprintstrlln("ROBOT:Detected Object");
             states[robotState]->object_detected(true);
         }else{
-            dprintstrlln("Undetected Object");
+            dprintstrlln("ROBOT:Undetected Object");
             states[robotState]->object_detected(false);
         }
         delay(20);
@@ -74,27 +80,26 @@ void Robot::free() {
 }
 
 void Robot::driveForward() {
-    dprintstrlln("Drive Forward");
+    dprintstrlln("ROBOT:Drive Forward");
     update();
-    Control::right_motor.drive(driveSpeed);
-    Control::left_motor.drive(driveSpeed);
+    Control::right_motor.drive(rightDriveSpeed);
+    Control::left_motor.drive(leftDriveSpeed);
     vol = 1;
 }
 
 void Robot::driveBackward() {
-    dprintstrlln("Drive Backward");
+    dprintstrlln("ROBOT:Drive Backward");
     update();
-    Control::right_motor.drive(-driveSpeed);
-    Control::left_motor.drive(-driveSpeed);
+    Control::right_motor.drive(-rightDriveSpeed);
+    Control::left_motor.drive(-leftDriveSpeed);
     vol = -1;
 }
 
+
+
 void Robot::stop() {
-    dprintstrlln("Robot Stop");
-    update();
-    Control::right_motor.drive(0);
-    Control::left_motor.drive(0);
-    vol = 0;
+    dprintstrlln("ROBOT:Stop");
+    _stop();
 }
 
 void Robot::driveForward(Time time) {
@@ -115,39 +120,39 @@ void Robot::stop(Time time) {
 }
 
 void Robot::turnRight() {
-    dprintstrl("Turning Left. Facing:");
+    angle = angle == 0 ? 3 : angle - 1;
+    dprintstrl("ROBOT:Turning Right. Facing:");
     dprintln(RobotGraph::dirstr(angle));
-    update();
-    Control::right_motor.drive(driveSpeed);
-    Control::left_motor.drive(-driveSpeed);
+    _stop();
+    Control::right_motor.drive(turnSpeed);
+    Control::left_motor.drive(-turnSpeed);
     vol = 0;
-    angle -= 1;
-    angle = angle % 4 == 0 ? 0 : angle;
     delay(turnTime);
-    stop();
+    object_detection_delay.reset();
+    _stop();
 }
 
 void Robot::turnLeft() {
-    dprintstrl("Turning Left. Facing:");
+    angle = angle == 3 ? 0 : angle + 1;
+    dprintstrl("ROBOT:Turning Left. Facing:");
     dprintln(RobotGraph::dirstr(angle));
-    update();
-    Control::right_motor.drive(-driveSpeed);
-    Control::left_motor.drive(driveSpeed);
+    _stop();
+    Control::right_motor.drive(-turnSpeed);
+    Control::left_motor.drive(turnSpeed);
     vol = 0;
-    angle += 1;
-    angle = angle % 4 == 0 ? 0 : angle;
     delay(turnTime);
-    stop();
+    object_detection_delay.reset();
+    _stop();
 }
 
 void Robot::turnAround() {
-    dprintstrlln("Turning Around");
+    dprintstrlln("ROBOT:Turning Around");
     turnRight();
     turnRight();
 }
 
 Robot::~Robot() {
-    dprintstrlln("Destroying Robot");
+    dprintstrlln("ROBOT:Destroyed");
     states.~RobotStates();
 }
 
@@ -156,31 +161,42 @@ bool Robot::calibrated() const {
 }
 
 void Robot::change_state(int next_state, bool fire_destroy, bool fire_init) {
+    lastRobotState = robotState;
     if (next_state != robotState) {
-        dprintstrl("Changing State to:");
+        dprintstrlln("=========State Change=========");
+        dprintstrl("\tChanging State to:");
+        dprint(states[next_state]->getName());
+        dprintstrl("(");
         dprint(next_state);
-        dprintstrl(" Destroy:");
-        dprint(fire_destroy);
-        dprintstrl(" Init:");
-        dprintln(fire_init);
+        dprintstrl(")\tFrom State:");
+        dprintln(states[robotState]->getName());
+        dprintstrl("(");
+        dprint(robotState);
+        dprintstrl(")");
 
         if (fire_destroy) {
-            dprintstrl("Destroyed State ");
-            dprintln(robotState);
+            dprintstrl("\tDestroying State ");
             states[robotState]->destroy_state();
+            dprintln(states[robotState]->getName());
         }
+
         robotState = next_state;
+
         if (fire_init) {
-            dprintstrl("Initialized State ");
-            dprintln(robotState);
+            dprintstrl("\tInitializing State ");
             states[robotState]->init_state();
+            dprintln(states[robotState]->getName());
         }
+
+        dprintstrlln("================");
     }
 }
 
 void Robot::gotoPoint(RobotPoint p) {
     vector<GraphDirection> dirs;
     object_graph.getPath(curr_loc, p, &dirs);
+    dprintstrl("Found Path!: Num Points:");
+    dprintln(dirs.size());
     for(auto dir : dirs){
         switch(dir){
             case GEast:
@@ -198,21 +214,15 @@ void Robot::gotoPoint(RobotPoint p) {
                 turnAround();
                 driveForward(driveTime);
                 break;
+            case GEnd:
+                dprintstrlln("Reached Location");
+                break;
         }
     }
 }
 
 RobotPoint Robot::getForwardPoint(GraphType distance) const {
-    switch(angle){
-        case GEast:
-            return {static_cast<GraphType>(distance + curr_loc.x), curr_loc.y};
-        case GNorth:
-            return {curr_loc.x, static_cast<GraphType>(distance + curr_loc.y)};
-        case GSouth:
-            return {curr_loc.x, static_cast<GraphType>(curr_loc.y - distance)};
-        default:
-            return {static_cast<GraphType>(curr_loc.x - distance), curr_loc.y};
-    }
+   return RobotPoint::getChangePoint(curr_loc, angle, distance);
 }
 
 bool Robot::isMoving() const {
@@ -235,14 +245,24 @@ int Robot::getVol() {
     return vol;
 }
 
+void Robot::_stop() {
+    update();
+    Control::right_motor.drive(0);
+    Control::left_motor.drive(0);
+    vol = 0;
+    delay(500);
+}
+
+int Robot::getLastState() {
+    return lastRobotState;
+}
+
 bool robot_heart_beat(int event, void* addr){
 #if DEBUG
     if(Robot::robot != nullptr){
-        dprintstrl("Robot Position (");
-        dprint(Robot::robot->curr_loc.x);
-        dprintstrl(",");
-        dprint(Robot::robot->curr_loc.y);
-        dprintstrl(")\tVelocity:");
+        dprintstrl("\tRobot Position ");
+        print(Robot::robot->curr_loc);
+        dprintstrl("\tVelocity:");
         dprint(Robot::robot->getVol());
         dprintstrl("\tDirection:");
         dprintln(RobotGraph::dirstr(Robot::robot->getAngle()));

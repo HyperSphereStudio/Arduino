@@ -40,14 +40,30 @@ void core::raminfo(int* usedDynamicRAM, int* usedStaticRAM, int* usedStackRAM, i
     char *heapend = malloc(1);
     char stack_ptr = 0;
 
-    usedStaticRAM[0] = &_end - RAM_START;
-    usedStackRAM[0] = ramend - &stack_ptr;
+    usedStackRAM[0] = &_end - RAM_START;
+    usedStaticRAM[0] = ramend - &stack_ptr;
     freeRAM[0] = &stack_ptr - heapend;
     free(heapend);
 }
 
 int core::rand_b(int lower, int upper) {
     return (rand() % (upper - lower + 1)) + lower;
+}
+
+void core::printraminfo() {
+    int usedDynamicRAM;
+    int usedStaticRAM;
+    int usedStackRAM;
+    int freeRAM;
+    core::raminfo(&usedDynamicRAM, &usedStaticRAM, &usedStackRAM, &freeRAM);
+    debug_print(F("RAM INFORMATION:  USED_DYN_RAM:"));
+    debug_print(usedDynamicRAM);
+    debug_print(F("\tUSED_STAT_RAM:"));
+    debug_print(usedStaticRAM);
+    debug_print(F("\tUSED_STAK_RAM:"));
+    debug_print(usedStackRAM);
+    debug_print(F("\tFREE_RAM:"));
+    debug_println(freeRAM);
 }
 
 

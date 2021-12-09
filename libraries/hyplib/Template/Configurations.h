@@ -23,6 +23,7 @@
 #define dprintln(v) (debug_println(v))
 #define dprintstrl(string_literal) (debug_print(strl(string_literal)))
 #define dprint(v) (debug_print(v))
+#define dprln (dprintstrl("\n"))
 
 #else
 
@@ -30,6 +31,7 @@
 #define dprintln(v) ()
 #define dprintstrl(string_literal) ()
 #define dprint(v) ()
+#define dprln ()
 
 #endif
 

@@ -5,7 +5,7 @@
 #include "BasicMotor.h"
 #include "core.h"
 
-BasicMotor::BasicMotor(int IN1, int IN2, int PW) : in1(IN1), in2(IN2), pw(PW){}
+BasicMotor::BasicMotor(int IN1, int IN2, int PW, bool opposite = false) : in1(IN1), in2(IN2), pw(PW), opposite(opposite){}
 
 void BasicMotor::init(){
     pinMode(in1, OUTPUT);
@@ -14,6 +14,9 @@ void BasicMotor::init(){
 }
 
 void BasicMotor::drive(int motorSpeed) {
+    if(opposite){
+        motorSpeed *= -1;
+    }
     if (motorSpeed > 0)
     {
         digitalWrite(in1, HIGH);
